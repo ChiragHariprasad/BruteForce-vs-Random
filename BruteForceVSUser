@@ -1,0 +1,93 @@
+def print_board(board):
+    for row in board:
+        print("|".join(row))
+        print("---------")
+
+def checkWinner(board, player):
+    for i in range(3):
+        if all(board[i][j] == player for j in range(3)) or all(board[j][i] == player for j in range(3)):
+            return True
+    if all(board[i][i] == player for i in range(3)) or all(board[i][2 - i] == player for i in range(3)):
+        return True
+    return False
+
+def boardFull(board):
+    return all(board[i][j] != ' ' for i in range(3) for j in range(3))
+
+def dfs(board, player):
+    if checkWinner(board, 'X'):
+        return 1
+    elif checkWinner(board, 'O'):
+        return -1
+    elif boardFull(board):
+        return 0
+    scores = []
+    for i in range(3):
+        for j in range(3):
+            if board[i][j] == ' ':
+                board[i][j] = player
+                scores.append(dfs(board, 'O' if player == 'X' else 'X'))
+                board[i][j] = ' '  # Undo move
+    return max(scores) if player == 'X' else min(scores)
+
+def findBestMove(board):
+    bestScore = float('-inf')
+    bestMove = (-1, -1)
+    for i in range(3):
+        for j in range(3):
+            if board[i][j] == ' ':
+                board[i][j] = 'X'
+                score = dfs(board, 'O')
+                board[i][j] = ' '  # Undo move
+                if score > bestScore:
+                    bestScore = score
+                    bestMove = (i, j)
+    return bestMove
+
+def playGame():
+    board = [[' ' for _ in range(3)] for _ in range(3)]
+    
+    while True:
+        print_board(board)
+
+        # Human player's move (O)
+        while True:
+            try:
+                row = int(input("Enter Row (0-2): "))
+                col = int(input("Enter Column (0-2): "))
+
+                if 0 <= row <= 2 and 0 <= col <= 2 and board[row][col] == ' ':
+                    board[row][col] = 'O'
+                    break
+                else:
+                    print("Invalid Move, try again.")
+            except ValueError:
+                print("Invalid input. Enter numbers between 0 and 2.")
+
+        # Check if human wins
+        if checkWinner(board, 'O'):
+            print_board(board)
+            print("Player (O) wins!!")
+            return
+
+        if boardFull(board):
+            print_board(board)
+            print("It's a Tie!!")
+            return
+
+        # AI's move (X)
+        row, col = findBestMove(board)
+        board[row][col] = 'X'
+
+        # Check if AI wins
+        if checkWinner(board, 'X'):
+            print_board(board)
+            print("AI (X) wins!!")
+            return
+
+        if boardFull(board):
+            print_board(board)
+            print("It's a Tie!!")
+            return
+
+playGame()
