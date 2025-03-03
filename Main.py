@@ -60,7 +60,7 @@ def playGame(game_number):
     print_board(board)
 
     while True:
-        time.sleep(0.5)  # Small delay for better visibility
+        #time.sleep(0.5)  # Small delay for better visibility
 
         # Dumb AI ("O") move
         row, col = randomMove(board)
@@ -76,7 +76,7 @@ def playGame(game_number):
             print("\nIt's a Tie!\n")
             return "Tie"
 
-        time.sleep(0.5)  # Delay for better visibility
+        #time.sleep(0.5)  # Delay for better visibility
 
         # Smart AI ("X") move
         row, col = findBestMove(board)
@@ -104,7 +104,7 @@ for game in range(1, 51):
     else:
         ties += 1
 
-    time.sleep(1)  # Pause before the next game starts
+    #time.sleep(1)  # Pause before the next game starts
 
 # Print final scores
 print("\nFinal Scores after 50 Games:")
